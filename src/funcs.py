@@ -10,6 +10,3 @@ def acceptance_oper():
 
 def print_oper(date, description, from_, to_, amount, currency):
     pass
-
-
-acceptance_oper()
