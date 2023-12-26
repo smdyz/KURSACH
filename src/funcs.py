@@ -17,6 +17,8 @@ def date_for_oper(date_oper):
     date_oper = date(int(date_oper[0]), int(date_oper[1]), int(date_oper[2]))
     return date_oper
 
+print(date_for_oper(acceptance_oper()[0]["date"]))
+
 
 # work
 def latest_opers():
