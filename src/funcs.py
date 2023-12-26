@@ -1,49 +1,73 @@
 import json
+from datetime import date
 import datetime
-import locale
-
-locale.setlocale(locale.LC_ALL, 'ru_RU.utf8')
-
-
-# dont work
-def acceptance_oper():
-    # with open("operations.json") as f:
-    #     data = json.load(f)
-    with open("operations.txt") as file:
-        for i in file:
-            print(i)
 
 
 # work
-def date_for_oper(date_oper: str):
+def acceptance_oper():
+    with open("operations.txt", "r", encoding="UTF-8") as file:
+        data = file.read()
+        dict_array = json.loads(data)
+        return dict_array
+
+
+# work
+def date_for_oper(date_oper):
     date_oper = date_oper[:10].split("-")
-    return f"{date_oper[-1]}.{date_oper[-2]}.{date_oper[-3]}"
+    date_oper = date(int(date_oper[0]), int(date_oper[1]), int(date_oper[2]))
+    return date_oper
+
+
+# work
+def latest_opers():
+    new_list = []
+    for_list = {}
+
+    for i in acceptance_oper():
+        if i['state'] == "EXECUTED" and i['date'].startswith("2019-"):
+
+            date1 = date_for_oper(i["date"])
+
+            for j in acceptance_oper():
+
+                date2 = date_for_oper(j["date"])
+
+                if date2 > date1 and j not in new_list:
+                    date1 = date2
+                    for_list = j
+
+            new_list.append(for_list)
+            if len(new_list) >= 5:
+                return new_list
 
 
 # work
 def hidden_num(card: str):
-    card = card.split()
-    num = card[-1]
-    if card[0].startswith("Счет"):
-        hid_num = f"**{num[-4:]}"
+    if card != '':
+        card = card.split()
+        num = card[-1]
+        if card[0].startswith("Счет"):
+            hid_num = f"**{num[-4:]}"
+        else:
+            hid_num = f"{num[:4]} {num[4:6]}** **** {num[-4:]}"
+        card[-1] = hid_num
+        return " ".join(card)
     else:
-        hid_num = f"{num[:4]} {num[4:6]}** **** {num[-4:]}"
-    card[-1] = hid_num
-    return " ".join(card)
+        return ""
 
 
-date = "2018-08-19T04:27:37.904916"
-description = "Перевод с карты на карту"
-from_ = "Visa Classic 6831982476737658"
-to_ = "Visa Platinum 8990922113665229"
-amount = "56883.54"
-currency = "USD"
-
-
-def print_oper(date, description, from_, to_, amount, currency):
-    print(f"""{date_for_oper(date)} {description}
+def print_oper(data, description, to_, amount, currency, from_=""):
+    print(f"""{date_for_oper(data).strftime("%d.%m.%Y")} {description}
 {hidden_num(from_)} -> {hidden_num(to_)}
 {amount} {currency}""")
 
 
-print_oper(date, description, from_, to_, amount, currency)
+for element in latest_opers():
+    if "from" in element.keys():
+        print_oper(element["date"], element["description"], element["to"],
+                   element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"], element["from"])
+        print("\n\n\n")
+    else:
+        print_oper(element["date"], element["description"], element["to"],
+                   element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"])
+        print("\n\n\n")
