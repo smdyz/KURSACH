@@ -60,14 +60,3 @@ def print_oper(data, description, to_, amount, currency, from_=""):
     print(f"""{date_for_oper(data).strftime("%d.%m.%Y")} {description}
 {hidden_num(from_)} -> {hidden_num(to_)}
 {amount} {currency}""")
-
-
-for element in latest_opers():
-    if "from" in element.keys():
-        print_oper(element["date"], element["description"], element["to"],
-                   element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"], element["from"])
-        print("\n\n\n")
-    else:
-        print_oper(element["date"], element["description"], element["to"],
-                   element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"])
-        print("\n\n\n")

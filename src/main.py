@@ -1,15 +1,13 @@
-from src.funcs import acceptance_oper
-# import datetime
+import funcs
 
+for element in funcs.latest_opers():
+    if "from" in element.keys():
+        funcs.print_oper(element["date"], element["description"], element["to"],
+                         element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"],
+                         element["from"])
+        print("\n\n\n")
+    else:
+        funcs.print_oper(element["date"], element["description"], element["to"],
+                         element["operationAmount"]["amount"], element["operationAmount"]["currency"]["name"])
+        print("\n\n\n")
 
-# def acceptance_oper():
-#     with open("operations.json") as file:
-#         json_dict = file.read()
-#     print(json.loads(json_dict))
-
-
-def print_oper(date, description, from_, to_, amount, currency):
-    pass
-
-print("hello")
-acceptance_oper()
