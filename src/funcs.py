@@ -5,7 +5,7 @@ import datetime
 
 # work
 def acceptance_oper():
-    with open("operations.json", "r", encoding="UTF-8") as file:
+    with open("../operations.json", "r", encoding="UTF-8") as file:
         data = file.read()
         dict_array = json.loads(data)
         final_dict = []
