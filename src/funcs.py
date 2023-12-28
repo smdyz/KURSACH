@@ -5,10 +5,14 @@ import datetime
 
 # work
 def acceptance_oper():
-    with open("operations.txt", "r", encoding="UTF-8") as file:
+    with open("operations.json", "r", encoding="UTF-8") as file:
         data = file.read()
         dict_array = json.loads(data)
-        return dict_array
+        final_dict = []
+        for element in dict_array:
+            if len(element) > 1:
+                final_dict.append(element)
+        return final_dict
 
 
 # work
@@ -17,8 +21,6 @@ def date_for_oper(date_oper):
     date_oper = date(int(date_oper[0]), int(date_oper[1]), int(date_oper[2]))
     return date_oper
 
-print(date_for_oper(acceptance_oper()[0]["date"]))
-
 
 # work
 def latest_opers():
@@ -26,17 +28,20 @@ def latest_opers():
     for_list = {}
 
     for i in acceptance_oper():
+
         if i['state'] == "EXECUTED" and i['date'].startswith("2019-"):
 
             date1 = date_for_oper(i["date"])
 
             for j in acceptance_oper():
 
-                date2 = date_for_oper(j["date"])
+                if j['state'] == "EXECUTED" and j['date'].startswith("2019-"):
 
-                if date2 > date1 and j not in new_list:
-                    date1 = date2
-                    for_list = j
+                    date2 = date_for_oper(j["date"])
+
+                    if date2 > date1 and j not in new_list:
+                        date1 = date2
+                        for_list = j
 
             new_list.append(for_list)
             if len(new_list) >= 5:
