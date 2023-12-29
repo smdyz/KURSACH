@@ -22,30 +22,34 @@ def date_for_oper(date_oper):
     return date_oper
 
 
+def executed_list(dict_list:list):
+    output_list = []
+    for i in dict_list:
+        if i['state'] == "EXECUTED":
+            output_list.append(i)
+    return output_list
+
+
 # work
 def latest_opers():
     new_list = []
     for_list = {}
 
-    for i in acceptance_oper():
+    for i in executed_list(acceptance_oper()):
 
-        if i['state'] == "EXECUTED" and i['date'].startswith("2019-"):
+        date1 = date_for_oper(i["date"])
 
-            date1 = date_for_oper(i["date"])
+        for j in executed_list(acceptance_oper()):
 
-            for j in acceptance_oper():
+            date2 = date_for_oper(j["date"])
 
-                if j['state'] == "EXECUTED" and j['date'].startswith("2019-"):
+            if date2 > date1 and j not in new_list:
+                date1 = date2
+                for_list = j
 
-                    date2 = date_for_oper(j["date"])
-
-                    if date2 > date1 and j not in new_list:
-                        date1 = date2
-                        for_list = j
-
-            new_list.append(for_list)
-            if len(new_list) >= 5:
-                return new_list
+        new_list.append(for_list)
+        if len(new_list) >= 5:
+            return new_list
 
 
 # work
